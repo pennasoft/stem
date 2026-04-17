@@ -15,40 +15,12 @@
     <packaging>jar</packaging>
 
     <name>stem-core</name>
-    <description>Stem Core - Task entity actions, task lifecycle and persistence</description>
+    <description>STEM domain behavior and internal services built on stem-common without API or starter concerns</description>
 
     <dependencies>
         <dependency>
             <groupId>belfius.gejb.stem</groupId>
             <artifactId>stem-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <!-- Spring Data JPA for persistence -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!-- MapStruct for object mapping -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

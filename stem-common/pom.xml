@@ -15,19 +15,5 @@
     <packaging>jar</packaging>
 
     <name>stem-common</name>
-    <description>Stem Common - Shared DTOs, enums and models</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <description>STEM shared contracts, DTOs, enums, and utilities without Spring runtime coupling</description>
 </project>

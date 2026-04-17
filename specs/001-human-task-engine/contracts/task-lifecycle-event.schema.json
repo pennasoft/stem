@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stem.local/contracts/task-lifecycle-event.schema.json",
+  "title": "TaskLifecycleEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eventId",
+    "eventType",
+    "occurredAt",
+    "task",
+    "correlation",
+    "transition",
+    "actor"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "type": "string",
+      "const": "stem.task.lifecycle.changed.v1"
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "reference", "state"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["CREATED", "ASSIGNED", "IN_PROGRESS", "COMPLETED"]
+        },
+        "ownerUserId": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "reference", "entity", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "entity": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "toState"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["CREATE", "ASSIGN", "REFUSE", "START", "COMPLETE"]
+        },
+        "fromState": {
+          "type": ["string", "null"],
+          "enum": ["CREATED", "ASSIGNED", "IN_PROGRESS", "COMPLETED", null]
+        },
+        "toState": {
+          "type": "string",
+          "enum": ["CREATED", "ASSIGNED", "IN_PROGRESS", "COMPLETED"]
+        },
+        "reason": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["userId"],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "role": {
+          "type": ["string", "null"],
+          "enum": ["OWNER", "POTENTIAL_OWNER", "ADMINISTRATOR", null]
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sequence": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "publisher": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  }
+}
+

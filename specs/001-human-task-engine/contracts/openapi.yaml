@@ -1,0 +1,314 @@
+openapi: 3.0.3
+info:
+  title: STEM Human Task Engine API
+  version: 1.0.0-plan
+  description: |
+    Planned optional REST contract for the human task engine feature.
+    These endpoints are only exposed when `stem.task-engine.api.enabled=true`.
+servers:
+  - url: /api/stem
+paths:
+  /correlations:
+    post:
+      operationId: createCorrelation
+      summary: Register a correlation before any task is created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCorrelationRequest'
+      responses:
+        '201':
+          description: Correlation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrelationResponse'
+        '409':
+          description: Duplicate correlation reference/type
+        '422':
+          description: Validation failure
+  /tasks:
+    post:
+      operationId: createUserTask
+      summary: Create a task under an existing correlation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserTaskRequest'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskOperationResult'
+        '404':
+          description: Referenced correlation does not exist
+        '403':
+          description: Actor is not permitted
+        '422':
+          description: Validation failure
+  /tasks/{taskId}:
+    get:
+      operationId: getUserTask
+      summary: Get task details by identifier
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskResponse'
+        '404':
+          description: Task not found
+  /tasks/{taskId}/assign:
+    post:
+      operationId: assignUserTask
+      summary: Assign a task to an owner
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskActionRequest'
+      responses:
+        '200':
+          description: Assignment result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskOperationResult'
+        '403':
+          description: Actor is not permitted
+        '409':
+          description: Concurrency conflict or invalid state transition
+        '404':
+          description: Task not found
+  /tasks/{taskId}/refuse:
+    post:
+      operationId: refuseUserTask
+      summary: Refuse a currently assigned task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskActionRequest'
+      responses:
+        '200':
+          description: Refusal result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskOperationResult'
+        '403':
+          description: Actor is not permitted
+        '409':
+          description: Concurrency conflict or invalid state transition
+        '404':
+          description: Task not found
+  /tasks/{taskId}/start:
+    post:
+      operationId: startUserTask
+      summary: Start work on an assigned task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskActionRequest'
+      responses:
+        '200':
+          description: Start result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskOperationResult'
+        '403':
+          description: Actor is not permitted
+        '409':
+          description: Concurrency conflict or invalid state transition
+        '404':
+          description: Task not found
+  /tasks/{taskId}/complete:
+    post:
+      operationId: completeUserTask
+      summary: Complete a started task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskRequest'
+      responses:
+        '200':
+          description: Completion result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTaskOperationResult'
+        '403':
+          description: Actor is not permitted
+        '409':
+          description: Concurrency conflict or invalid state transition
+        '404':
+          description: Task not found
+components:
+  parameters:
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    CreateCorrelationRequest:
+      type: object
+      required: [reference, entity, type]
+      properties:
+        reference:
+          type: string
+        entity:
+          type: string
+        type:
+          type: string
+        createdBy:
+          type: string
+    CorrelationResponse:
+      type: object
+      required: [id, reference, entity, type]
+      properties:
+        id:
+          type: string
+          format: uuid
+        reference:
+          type: string
+        entity:
+          type: string
+        type:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CreateUserTaskRequest:
+      type: object
+      required: [correlationId, taskReference, title, actorId]
+      properties:
+        correlationId:
+          type: string
+          format: uuid
+        taskReference:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        actorId:
+          type: string
+        ownerUserId:
+          type: string
+        potentialOwnerUserIds:
+          type: array
+          items:
+            type: string
+        administratorUserIds:
+          type: array
+          items:
+            type: string
+    TaskActionRequest:
+      type: object
+      required: [actorId]
+      properties:
+        actorId:
+          type: string
+        ownerUserId:
+          type: string
+        reason:
+          type: string
+    CompleteTaskRequest:
+      allOf:
+        - $ref: '#/components/schemas/TaskActionRequest'
+        - type: object
+          required: [actorId]
+          properties:
+            completionOutcome:
+              type: string
+    UserTaskResponse:
+      type: object
+      required: [id, correlationId, taskReference, title, state, participants]
+      properties:
+        id:
+          type: string
+          format: uuid
+        correlationId:
+          type: string
+          format: uuid
+        taskReference:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+          enum: [CREATED, ASSIGNED, IN_PROGRESS, COMPLETED]
+        ownerUserId:
+          type: string
+          nullable: true
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskUserResponse'
+        updatedAt:
+          type: string
+          format: date-time
+    TaskUserResponse:
+      type: object
+      required: [userId, role, active]
+      properties:
+        userId:
+          type: string
+        role:
+          type: string
+          enum: [OWNER, POTENTIAL_OWNER, ADMINISTRATOR]
+        active:
+          type: boolean
+    UserTaskOperationResult:
+      type: object
+      required: [success, taskId, state]
+      properties:
+        success:
+          type: boolean
+        taskId:
+          type: string
+          format: uuid
+        state:
+          type: string
+          enum: [CREATED, ASSIGNED, IN_PROGRESS, COMPLETED]
+        rejectionCode:
+          type: string
+          nullable: true
+        message:
+          type: string
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+        eventQueued:
+          type: boolean
+
