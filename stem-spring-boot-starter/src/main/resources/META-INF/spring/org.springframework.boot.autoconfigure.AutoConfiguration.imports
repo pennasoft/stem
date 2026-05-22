@@ -1,1 +1,3 @@
-belfius.gejb.stem.starter.StemAutoConfiguration
+belfius.gejb.stem.starter.task.autoconfigure.StemTaskEngineAutoConfiguration
+belfius.gejb.stem.starter.task.autoconfigure.StemTaskEngineApiAutoConfiguration
+belfius.gejb.stem.starter.task.autoconfigure.StemTaskEngineEventHubAutoConfiguration

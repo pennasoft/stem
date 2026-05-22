@@ -28,6 +28,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <spring-boot.version>3.2.5</spring-boot.version>
+        <azure-eventhubs.version>5.15.8</azure-eventhubs.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
@@ -42,6 +43,12 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.azure</groupId>
+                <artifactId>azure-messaging-eventhubs</artifactId>
+                <version>${azure-eventhubs.version}</version>
             </dependency>
 
             <!-- Internal modules -->

@@ -1,19 +1,12 @@
 package belfius.gejb.stem.starter;
 
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-
 /**
- * Spring Boot auto-configuration for the Stem library.
+ * Legacy compatibility placeholder.
  * <p>
- * Automatically configures the Stem Standalone Task Engine Module when it is
- * present on the classpath. Consumers can override individual beans by defining
- * their own beans of the same type.
+ * The task engine starter now uses explicit auto-configuration classes under
+ * {@code belfius.gejb.stem.starter.task.autoconfigure} registered in
+ * {@code AutoConfiguration.imports}. This class intentionally performs no
+ * component scanning.
  */
-@AutoConfiguration
-@ComponentScan(basePackages = {
-        "belfius.gejb.stem.core",
-        "belfius.gejb.stem.api"
-})
 public class StemAutoConfiguration {
 }

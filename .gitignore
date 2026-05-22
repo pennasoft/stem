@@ -3,6 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.class
+*.jar
+.gradle/
+out/
 
 # IntelliJ IDEA
 .idea/
@@ -35,6 +39,8 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+*.tmp
+*.swp
 
 # Log files
 *.log
